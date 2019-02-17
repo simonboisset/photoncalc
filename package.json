@@ -1,0 +1,31 @@
+{
+  "name": "photoncalc",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "html2canvas": "^1.0.0-alpha.12",
+    "moment": "^2.22.2",
+    "react": "^16.8.2",
+    "react-dom": "^16.4.1",
+    "react-hoverstate": "^0.1.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.5",
+    "recharts": "^1.5.0",
+    "regression": "^2.0.1",
+    "styled-components": "^4.1.3",
+    "vis": "^4.21.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
