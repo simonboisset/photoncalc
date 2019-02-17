@@ -12,17 +12,30 @@ import {guid} from "../functions";
 
 
 export class Chart extends React.Component {
+    ticks=()=>{
+        let interval = (this.props.data.end-this.props.data.start)/7;
+        let ticks=[], i = 0, y = 0;
+        while (this.props.data.start+y <= this.props.data.end) {
+          ticks[i]=Math.round((this.props.data.start+y)/5)*5;
+          i++;
+          y = y + interval;
+        }
+        return ticks;
+    }
+    domain=()=>{
+        return [Math.round((this.props.data.start)/5)*5,Math.round((this.props.data.end)/5)*5];
+    }
+      
     renderReferenceLine = () => {
         if(this.props.referenceline){
+            
             return (
                 this.props.referenceline.map((line) =>
-                    <div key={guid()}>
-                        {line.type==="y" ? (
-                            <ReferenceLine y={line.value} stroke="red" strokeDasharray="3 3"/>
-                        ) : (
-                            <ReferenceLine x={line.value} stroke="red" strokeDasharray="3 3"/>
-                        )}
-                    </div>
+                    line.type==="y" ? (
+                        <ReferenceLine key={guid()} y={line.value} stroke="red" strokeDasharray="3 3"/>
+                    ) : (
+                        <ReferenceLine key={guid()} x={line.value} stroke="red" strokeDasharray="3 3"/>
+                    )
                 )
             );
         }
@@ -56,10 +69,10 @@ export class Chart extends React.Component {
     }
     render() {
       return (
-        <AreaChart  width={550} height={400} data={this.props.data}
+        <AreaChart  width={550} height={400} data={this.props.data.data}
         margin={{ top: 0, right: 0, left: 0, bottom: 20 }}>
-        <XAxis allowDataOverflow={true} type="number" dataKey="name" domain={this.props.domain}
-          label={{ value: this.props.xlabel, offset: -5, position: 'insideBottom' }} ticks={this.props.ticks} scale="linear"/>
+        <XAxis allowDataOverflow={true} type="number" dataKey="name" domain={this.domain()}
+          label={{ value: this.props.xlabel, offset: -5, position: 'insideBottom' }} ticks={this.ticks()} scale="linear"/>
         <YAxis hide={false} allowDataOverflow={true} type="number" domain={[0, 1]}
           label={{ value: this.props.ylabel, angle: -90, position: 'insideLeft' }}/>
         <CartesianAxis/>

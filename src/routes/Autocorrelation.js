@@ -1,5 +1,5 @@
 import React from 'react';
-import {save2png,getData,setData,undefinedRoute,readFile,ticks,domain} from '../functions';
+import {save2png,getData,setData,undefinedRoute,readFile} from '../functions';
 import {InputAdornment} from '@material-ui/core';
 import {Input,Div,Button,Chart} from "../components";
 
@@ -75,24 +75,6 @@ class Autocorrelation extends React.Component {
       }
     }
   }
-  renderpulse=()=>{
-    return(
-      <div ref="targetimg" id="targetimg">
-      <Chart 
-      area={[
-        {name: "pulse",color:"blue"},
-        {name: "fit",color:"red"}
-      ]}
-      referenceline={[
-        {value:this.analyse().X_FWHM_min},
-        {value:this.analyse().X_FWHM_max},
-        {type:"y",value:1/getData(this).niveau},
-      ]}
-      legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
-      xlabel='Wavelength (nm)' ylabel='Intensity (a.u)' ticks={ticks(getData(this))} domain={domain(getData(this))}/>
-    </div>
-    );
-  }
   render() {
     return(
     <Div justify="space-around" row margin="25px" width="100%">
@@ -149,7 +131,19 @@ class Autocorrelation extends React.Component {
       /></Div>
       <Button width="100%" variant="contained" onClick={()=>{save2png(this.refs.targetimg)}}>Screenshot</Button>
     </Div>
-    <Div margin="25px">{this.renderpulse()}<div id="loadImg"></div></Div>
+    <Div margin="25px">
+    <div ref="targetimg" id="targetimg">
+      <Chart 
+      data={getData(this)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+      referenceline={[
+        {value:this.analyse().X_FWHM_min},
+        {value:this.analyse().X_FWHM_max},
+        {type:"y",value:1/getData(this).niveau},
+      ]}
+      legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
+      xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'/>
+    </div>
+    <div id="loadImg"></div></Div>
     </Div>
     );
   }
