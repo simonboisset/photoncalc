@@ -131,8 +131,7 @@ class Autocorrelation extends React.Component {
       /></Div>
       <Button width="100%" variant="contained" onClick={()=>{save2png(this.refs.targetimg)}}>Screenshot</Button>
     </Div>
-    <Div margin="25px">
-    <div ref="targetimg" id="targetimg">
+    <Div margin="25px" ref="targetimg" id="targetimg">
       <Chart 
       data={getData(this)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
       referenceline={[
@@ -142,7 +141,6 @@ class Autocorrelation extends React.Component {
       ]}
       legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
       xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'/>
-    </div>
     <div id="loadImg"></div></Div>
     </Div>
     );

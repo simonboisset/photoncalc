@@ -1,4 +1,3 @@
-import './icon.css';
 import {Button} from './Button';
 import {Input} from './Input';
 import {Header} from './Header';
@@ -8,7 +7,7 @@ import {Div} from './Div';
 import {Title} from './Title';
 import {ToolBar} from './ToolBar';
 import {Menu,MenuItem,IconButton} from './Menu';
-import Icon from './Icon';
+import {Icon} from './Icon';
 import {List,ListItem,ListItemIcon,ListItemText,Divider,ListItemSecondaryAction} from './List';
 import {Dialog,DialogActions,DialogContent,DialogTitle,Slide} from './Dialog';
 import SearchBar from './SearchBar';
