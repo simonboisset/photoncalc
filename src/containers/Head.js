@@ -258,8 +258,10 @@ class Head extends Component {
   render() {
     return (
       <Header shadow position="fixed">
-        <IconButton onClick={()=>hoverstate.setState({drawer:true})}><Icon>save</Icon></IconButton>
-        <Link to="/"><Title>Tools</Title></Link>
+        <Div row align="center">
+          <IconButton onClick={()=>hoverstate.setState({drawer:true})}><Icon>save</Icon></IconButton>
+          <Link to="/"><Title>Photoncalc</Title></Link>
+        </Div>
         <Div/><Div/>
         <Div row align="center">
 
