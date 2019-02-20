@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Div,Body,Footer,Router, Route} from "./components";
 import Head from "./containers/Head";
 import SlideBar from "./containers/SlideBar";
-import {Home,Autocorrelation,M2,Mode,Propagation,Puissance,RapportSpectre,Spectre,Pointe} from "./routes";
+import {Home,Autocorrelation,M2,Mode,Propagation,Puissance,RapportSpectre,Spectre,Pointe} from "./pages";
 import hoverstate from 'react-hoverstate';
 class App extends Component {
   componentDidMount() {

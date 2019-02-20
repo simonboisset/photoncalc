@@ -8,7 +8,7 @@ import regression from 'regression';
 import { withRouter } from 'react-router-dom';
 class Autocorrelation extends React.Component {
   componentDidMount(){
-    undefinedRoute(this)
+    undefinedRoute(this);
     if(!getData(this).data){
       setData(this,{data:[],start:0,end:5});
     }
