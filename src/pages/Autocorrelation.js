@@ -1,7 +1,7 @@
 import React from 'react';
 import {save2png,getData,setData,undefinedRoute,readFile} from '../functions';
 import {InputAdornment} from '@material-ui/core';
-import {Input,Div,Button,Chart} from "../components";
+import {Input,Div,Button,Chart} from "src/components";
 
 import regression from 'regression';
 

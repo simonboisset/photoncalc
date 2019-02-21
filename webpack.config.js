@@ -7,6 +7,11 @@ module.exports = {
     filename: 'index.js',
     publicPath: '/'
   },
+  resolve: {
+    alias: {
+      src: path.resolve(__dirname, 'src')
+    }
+  },
   module: {
     rules: [
       {
@@ -35,7 +40,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg)$/,
+        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg|ico)$/,
         use: [
           {
             loader: 'file-loader',
