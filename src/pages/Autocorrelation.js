@@ -1,18 +1,10 @@
 import React from 'react';
-import {save2png,getData,setData,undefinedRoute,readFile} from '../functions';
-import {InputAdornment} from '@material-ui/core';
-import {Input,Div,Button,Chart} from "src/components";
-
+import {getData,setData,} from '../functions';
+import {Chart} from "src/components";
+import {Page} from "src/containers";
 import regression from 'regression';
-
 import { withRouter } from 'react-router-dom';
 class Autocorrelation extends React.Component {
-  componentDidMount(){
-    undefinedRoute(this);
-    if(!getData(this).data){
-      setData(this,{data:[],start:0,end:5});
-    }
-  }
   traitement=(input,Ymin,Ymax)=>{
     let data = input;
     let dataRegression=[];
@@ -77,72 +69,47 @@ class Autocorrelation extends React.Component {
   }
   render() {
     return(
-    <Div justify="space-around" row margin="25px" width="100%">
-    <Div margin="25px" align="center">
-      <input style={{display: 'none'}}type="file" id="input-file-pulse" onChange={(event)=>{readFile(event.target.files[0],this.traitement,{firstline:15,lastline:1, firstcol:1, lastcol:2, spliter: /\s+/})}}/>
-      <Button variant="outlined" onClick={(e) => document.getElementById("input-file-pulse").click()}>Charger pulse</Button>
-      <Div margin="15px 0 0 0"><Input
-        label="Niveau de la largeur"
-        type="number"
-        defaultValue={getData(this).niveau}
-        onChange={(e)=>{
-            setData(this,{niveau:e.target.value});
-          }}
-        variant="filled"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              1/
-            </InputAdornment>
-          ),
-        }}
-      /></Div>
-      <Div margin="15px 0 0 0"><Input
-        label="Start"
-        type="number"
-        defaultValue={getData(this).start}
-        onChange={(event)=>{
-          setData(this,{start:Number(event.target.value)});
-        }}
-        variant="filled"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="start">
-              nm
-            </InputAdornment>
-          ),
-        }}
-      /></Div>
-      <Div margin="15px 0 15px 0"><Input
-        label="End"
-        type="number"
-        defaultValue={getData(this).end}
-        onChange={(event)=>{
-          setData(this,{end:Number(event.target.value)});
-        }}
-        variant="filled"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="start">
-              nm
-            </InputAdornment>
-          ),
-        }}
-      /></Div>
-      <Button width="100%" variant="contained" onClick={()=>{save2png(this.refs.targetimg)}}>Screenshot</Button>
-    </Div>
-    <Div margin="25px" ref="targetimg" id="targetimg">
-      <Chart 
-      data={getData(this)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
-      referenceline={[
-        {value:this.analyse().X_FWHM_min},
-        {value:this.analyse().X_FWHM_max},
-        {type:"y",value:1/getData(this).niveau},
-      ]}
-      legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
-      xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'/>
-    <div id="loadImg"></div></Div>
-    </Div>
+      <Page
+      traitement={this.traitement}
+      param={{firstline:15,lastline:1, firstcol:1, lastcol:2, spliter: /\s+/}}
+      init={{data:[],start:0,end:5,level:2}} 
+      inputs={[
+        {
+          label:"Niveau de la largeur",
+          add:{
+            position:"start",
+            value:"1/"
+          },
+          value:"level"
+        },
+        {
+          label:"Start",
+          add:{
+            position:"end",
+            value:"nm"
+          },
+          value:"start"
+        },
+        {
+          label:"End",
+          add:{
+            position:"end",
+            value:"nm"
+          },
+          value:"end"
+        }
+        ]}
+      >
+        <Chart 
+        data={getData(this)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+        referenceline={[
+          {value:this.analyse().X_FWHM_min},
+          {value:this.analyse().X_FWHM_max},
+          {type:"y",value:1/getData(this).level},
+        ]}
+        legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
+        xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'/>
+      </Page>
     );
   }
 }
