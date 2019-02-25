@@ -1,5 +1,5 @@
 import hoverstate from 'react-hoverstate';
-export function getData(component){
+export function getData(id){
   let init = {
     data:null,
     niveau:2,
@@ -7,8 +7,8 @@ export function getData(component){
     end:1040
   }
   if (hoverstate.state.data) {
-    if (hoverstate.state.data[component.props.match.params.id]) {
-      return hoverstate.state.data[component.props.match.params.id]
+    if (hoverstate.state.data[id]) {
+      return hoverstate.state.data[id]
     }
     else {
       return init;
@@ -18,13 +18,13 @@ export function getData(component){
     return init;
   }
 }
-export function setData(component,object){
+export function setData(id,object){
   let data=hoverstate.state.data;
-  if (!data[component.props.match.params.id]) {
-    data[component.props.match.params.id]={}
+  if (!data[id]) {
+    data[id]={}
   }
   for (let variable in object) {
-    data[component.props.match.params.id][variable]=object[variable];
+    data[id][variable]=object[variable];
   }
   hoverstate.setState({data});
 }

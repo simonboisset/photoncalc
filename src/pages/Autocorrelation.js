@@ -1,10 +1,11 @@
 import React from 'react';
-import {getData,setData,} from '../functions';
+import {getData} from '../functions';
 import {Chart} from "src/components";
 import {Page} from "src/containers";
 import regression from 'regression';
 import { withRouter } from 'react-router-dom';
 class Autocorrelation extends React.Component {
+  
   traitement=(input,Ymin,Ymax)=>{
     let data = input;
     let dataRegression=[];
@@ -31,29 +32,29 @@ class Autocorrelation extends React.Component {
 
     let start = data[0].name;
     let end = data[data.length-1].name;
-    setData(this,{data,start,end});
+    return {data,start,end};
   }
   analyse = () =>{
-    if (!getData(this).data || getData(this).niveau===0) {
+    if (!getData(this.props.match.params.id).data || getData(this.props.match.params.id).niveau===0) {
         return {deltaWL:0,X_FWHM_max:0,X_FWHM_min:0};
     }
     else {
-      if(getData(this).data.length<5){
+      if(getData(this.props.match.params.id).data.length<5){
         return {deltaWL:0,X_FWHM_max:0,X_FWHM_min:0};
       }
       else{
-        let X_FWHM_max =getData(this).data[0].name;
-        let X_FWHM_min = getData(this).data[getData(this).data.length-1].name;
+        let X_FWHM_max =getData(this.props.match.params.id).data[0].name;
+        let X_FWHM_min = getData(this.props.match.params.id).data[getData(this.props.match.params.id).data.length-1].name;
         let somme = 0, diff = 0;
-        for (let i = 0; i < getData(this).data.length-1; i++) {
-          somme = somme + getData(this).data[i].fit;
-          diff = diff + Math.abs(getData(this).data[i].pulse-getData(this).data[i].fit);
-          if ((getData(this).data[i].fit<=1/getData(this).niveau && 1/getData(this).niveau<=getData(this).data[i+1].fit)||(getData(this).data[i].fit>=1/getData(this).niveau && 1/getData(this).niveau>=getData(this).data[i+1].fit)){
-            if(X_FWHM_max<getData(this).data[i].name){
-              X_FWHM_max = getData(this).data[i].name;
+        for (let i = 0; i < getData(this.props.match.params.id).data.length-1; i++) {
+          somme = somme + getData(this.props.match.params.id).data[i].fit;
+          diff = diff + Math.abs(getData(this.props.match.params.id).data[i].pulse-getData(this.props.match.params.id).data[i].fit);
+          if ((getData(this.props.match.params.id).data[i].fit<=1/getData(this.props.match.params.id).niveau && 1/getData(this.props.match.params.id).niveau<=getData(this.props.match.params.id).data[i+1].fit)||(getData(this.props.match.params.id).data[i].fit>=1/getData(this.props.match.params.id).niveau && 1/getData(this.props.match.params.id).niveau>=getData(this.props.match.params.id).data[i+1].fit)){
+            if(X_FWHM_max<getData(this.props.match.params.id).data[i].name){
+              X_FWHM_max = getData(this.props.match.params.id).data[i].name;
             }
-            if(X_FWHM_min>getData(this).data[i].name){
-              X_FWHM_min = getData(this).data[i].name;
+            if(X_FWHM_min>getData(this.props.match.params.id).data[i].name){
+              X_FWHM_min = getData(this.props.match.params.id).data[i].name;
             }
           }
         }
@@ -101,11 +102,11 @@ class Autocorrelation extends React.Component {
         ]}
       >
         <Chart 
-        data={getData(this)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+        data={getData(this.props.match.params.id)} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
         referenceline={[
           {value:this.analyse().X_FWHM_min},
           {value:this.analyse().X_FWHM_max},
-          {type:"y",value:1/getData(this).level},
+          {type:"y",value:1/getData(this.props.match.params.id).level},
         ]}
         legend={[`Quality : ${this.analyse().quality}%`,`\u0394t : ${this.analyse().deltaWL}fs`]}
         xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'/>

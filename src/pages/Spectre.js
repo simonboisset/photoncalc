@@ -27,7 +27,7 @@ class Spectre extends React.Component {
   // }
   setProps=(object)=>{
     let data = hoverstate.state.data;
-    hoverstate.setState({data});
+    
     for (let variable in object) {
       if (data[this.props.match.params.id]) {
         data[this.props.match.params.id][variable]=object[variable];
@@ -36,6 +36,7 @@ class Spectre extends React.Component {
       data[this.props.match.params.id]={[variable]:object[variable]};
       }
     }
+    hoverstate.setState({data});
   }
   propsToState = () => {
     if (hoverstate.state.data[this.props.match.params.id]) {
