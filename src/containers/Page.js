@@ -3,18 +3,23 @@ import {save2png,getData,setData,undefinedRoute,readFile} from 'src/functions';
 import {InputAdornment} from '@material-ui/core';
 import {Input,Div,Button} from "src/components";
 import { withRouter } from 'react-router-dom';
+import {Chart} from "src/components";
 class Page extends React.Component {
     constructor()
     {
         super();
         this.state={}
     }
+    shouldComponentUpdate(nextProps, nextState){
+        
+    }
     static getDerivedStateFromProps(props, state){
-        if(!getData(props.match.params.id).data){
+        let data = getData(props.match.params.id);
+        if(!data.data){
             setData(props.match.params.id,props.init);
             return props.init;
         }else if (!state.data) {
-            return getData(props.match.params.id);
+            return data;
         }else{
             return null;
         }
@@ -62,7 +67,16 @@ class Page extends React.Component {
                 <Button width="100%" variant="contained" onClick={()=>{save2png(this.refs.targetimg)}}>Screenshot</Button>
             </Div>
             <Div margin="25px" ref="targetimg" id="targetimg">
-                {this.props.children}
+                <Chart 
+                    data={this.state.data} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+                    referenceline={[
+                    {value:this.props.analyse(this.state).X_FWHM_min},
+                    {value:this.props.analyse(this.state).X_FWHM_max},
+                    {type:"y",value:1/this.state.level},
+                    ]}
+                    legend={[`Quality : ${this.props.analyse(this.state.data).quality}%`,`\u0394t : ${this.props.analyse(this.state.data).deltaWL}fs`]}
+                    xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'
+                />
                 <div id="loadImg"></div>
             </Div>
         </Div>
