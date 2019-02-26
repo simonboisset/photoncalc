@@ -1,6 +1,5 @@
 import React from 'react';
 import {ReferenceLine,Legend,AreaChart,Area,XAxis,YAxis,CartesianAxis} from 'recharts';
-import {guid} from "../functions";
 // Props input :
 // referenceline
 // legend
@@ -32,9 +31,9 @@ export class Chart extends React.Component {
             return (
                 this.props.referenceline.map((line) =>
                     line.type==="y" ? (
-                        <ReferenceLine key={guid()} y={line.value} stroke="red" strokeDasharray="3 3"/>
+                        <ReferenceLine key={line.value} y={line.value} stroke="red" strokeDasharray="3 3"/>
                     ) : (
-                        <ReferenceLine key={guid()} x={line.value} stroke="red" strokeDasharray="3 3"/>
+                        <ReferenceLine key={line.value} x={line.value} stroke="red" strokeDasharray="3 3"/>
                     )
                 )
             );
@@ -44,7 +43,7 @@ export class Chart extends React.Component {
         if(this.props.area){
             return (
                 this.props.area.map((line) =>
-                    <Area key={guid()} dot={false} type="linear" dataKey={line.name} stroke='none' fill={line.color}/>
+                    <Area key={line.name} dot={false} type="linear" dataKey={line.name} stroke='none' fill={line.color}/>
                 )
             );
         }

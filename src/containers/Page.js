@@ -19,7 +19,6 @@ class Page extends React.Component {
                     data[key] = analyse[key];
                 }
             }
-            console.log(data);
             return data;
         }else{
             let data = getData(props.match.params.id);
@@ -33,7 +32,6 @@ class Page extends React.Component {
                         data[key] = analyse[key];
                     }
                 }
-                console.log(data);
                 return data;
             }
         }
@@ -53,7 +51,7 @@ class Page extends React.Component {
     renderInput = () =>{
         return (
             this.props.inputs.map((input) =>
-            <Div key={Math.random().toString()} margin="15px 0 0 0"><Input
+            <Div key={input.value} margin="15px 0 0 0"><Input
                 label={input.label}
                 type={input.type ? input.type : 'number'}
                 value={this.state[input.value]}
@@ -70,7 +68,6 @@ class Page extends React.Component {
         );
     }
   render() {
-      
     return(
         <Div justify="space-around" row margin="25px" width="100%">
             <Div margin="25px" align="center">
