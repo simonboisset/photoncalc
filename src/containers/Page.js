@@ -10,19 +10,34 @@ class Page extends React.Component {
         super();
         this.state={}
     }
-    shouldComponentUpdate(nextProps, nextState){
-        
-    }
     static getDerivedStateFromProps(props, state){
-        let data = getData(props.match.params.id);
-        if(!data.data){
-            setData(props.match.params.id,props.init);
-            return props.init;
-        }else if (!state.data) {
+        if (state.data) {
+            let data =state;
+            let analyse = props.analyse(data);
+            for (const key in analyse) {
+                if (analyse.hasOwnProperty(key)) {
+                    data[key] = analyse[key];
+                }
+            }
+            console.log(data);
             return data;
         }else{
-            return null;
+            let data = getData(props.match.params.id);
+            if(!data.data){
+                setData(props.match.params.id,props.init);
+                return props.init;
+            }else {
+                let analyse = props.analyse(data)
+                for (const key in analyse) {
+                    if (analyse.hasOwnProperty(key)) {
+                        data[key] = analyse[key];
+                    }
+                }
+                console.log(data);
+                return data;
+            }
         }
+        
     }
     componentDidMount(){
         undefinedRoute(this);
@@ -33,7 +48,7 @@ class Page extends React.Component {
     }
     saveChange = (object) =>{
         this.setState(object);
-        setData(this.props.match.params.id,object);
+        // setData(this.props.match.params.id,object);
     }
     renderInput = () =>{
         return (
@@ -42,9 +57,7 @@ class Page extends React.Component {
                 label={input.label}
                 type={input.type ? input.type : 'number'}
                 value={this.state[input.value]}
-                onChange={(e)=>{
-                    this.saveChange({[input.value]:e.target.value});
-                }}
+                onChange={(e)=>this.setState({[input.value]:e.target.value})}
                 variant="filled"
                 InputProps={{
                 [input.add.position+"Adornment"]: (
@@ -68,13 +81,13 @@ class Page extends React.Component {
             </Div>
             <Div margin="25px" ref="targetimg" id="targetimg">
                 <Chart 
-                    data={this.state.data} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+                    data={this.state} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
                     referenceline={[
-                    {value:this.props.analyse(this.state).X_FWHM_min},
-                    {value:this.props.analyse(this.state).X_FWHM_max},
+                    {value:this.state.X_FWHM_min},
+                    {value:this.state.X_FWHM_max},
                     {type:"y",value:1/this.state.level},
                     ]}
-                    legend={[`Quality : ${this.props.analyse(this.state.data).quality}%`,`\u0394t : ${this.props.analyse(this.state.data).deltaWL}fs`]}
+                    legend={[`Quality : ${this.state.quality}%`,`\u0394t : ${this.state.deltaWL}fs`]}
                     xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'
                 />
                 <div id="loadImg"></div>

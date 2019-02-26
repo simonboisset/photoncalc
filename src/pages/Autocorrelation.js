@@ -1,7 +1,6 @@
 import React from 'react';
 import {Page} from "src/containers";
 import regression from 'regression';
-import { withRouter } from 'react-router-dom';
 class Autocorrelation extends React.Component {
   
   traitement=(input,Ymin,Ymax)=>{
@@ -96,4 +95,4 @@ class Autocorrelation extends React.Component {
     );
   }
 }
-export default withRouter(Autocorrelation);
+export default Autocorrelation;
