@@ -1,9 +1,9 @@
 import React from 'react';
-import {save2png,getData,setData,undefinedRoute,readFile} from 'src/functions';
+import {save2png,getData,setData,readFile} from 'src/functions';
+import {ReferenceLine,Legend,AreaChart,Area,XAxis,YAxis,CartesianAxis} from 'recharts';
 import {InputAdornment} from '@material-ui/core';
 import {Input,Div,Button} from "src/components";
 import { withRouter } from 'react-router-dom';
-import {Chart} from "src/components";
 class Page extends React.Component {
     constructor()
     {
@@ -11,34 +11,36 @@ class Page extends React.Component {
         this.state={}
     }
     static getDerivedStateFromProps(props, state){
-        if (state.data) {
-            let data =state;
-            let analyse = props.analyse(data);
-            for (const key in analyse) {
-                if (analyse.hasOwnProperty(key)) {
-                    data[key] = analyse[key];
-                }
-            }
-            return data;
-        }else{
-            let data = getData(props.match.params.id);
-            if(!data.data){
-                setData(props.match.params.id,props.init);
-                return props.init;
-            }else {
-                let analyse = props.analyse(data)
+        if (getData(props.match.params.id)) {
+            if (state.data) {
+                let data =state;
+                let analyse = props.analyse(data);
                 for (const key in analyse) {
                     if (analyse.hasOwnProperty(key)) {
                         data[key] = analyse[key];
                     }
                 }
                 return data;
+            }else{
+                let data = getData(props.match.params.id);
+                if(!data.data){
+                    setData(props.match.params.id,props.init);
+                    return props.init;
+                }else {
+                    let analyse = props.analyse(data)
+                    for (const key in analyse) {
+                        if (analyse.hasOwnProperty(key)) {
+                            data[key] = analyse[key];
+                        }
+                    }
+                    return data;
+                }
             }
+            
+        }else{
+            props.history.push('/');
+            return null;
         }
-        
-    }
-    componentDidMount(){
-        undefinedRoute(this);
     }
     load = (input,Ymin,Ymax)=>{
         let object = this.props.traitement(input,Ymin,Ymax);
@@ -46,7 +48,7 @@ class Page extends React.Component {
     }
     saveChange = (object) =>{
         this.setState(object);
-        // setData(this.props.match.params.id,object);
+        setData(this.props.match.params.id,object);
     }
     renderInput = () =>{
         return (
@@ -55,7 +57,7 @@ class Page extends React.Component {
                 label={input.label}
                 type={input.type ? input.type : 'number'}
                 value={this.state[input.value]}
-                onChange={(e)=>this.setState({[input.value]:e.target.value})}
+                onChange={(e)=>this.saveChange({[input.value]:e.target.value})}
                 variant="filled"
                 InputProps={{
                 [input.add.position+"Adornment"]: (
@@ -67,8 +69,62 @@ class Page extends React.Component {
             /></Div>)
         );
     }
-  render() {
-    return(
+    ticks=()=>{
+        let interval = (this.state.end-this.state.start)/7;
+        let ticks=[], i = 0, y = 0;
+        while (this.state.start+y <= this.state.end) {
+          ticks[i]=Math.round((this.state.start+y)/5)*5;
+          i++;
+          y = y + interval;
+        }
+        return ticks;
+    }
+    domain=()=>{
+        return [Math.round((this.state.start)/5)*5,Math.round((this.state.end)/5)*5];
+    }
+      
+    renderReferenceLine = () => {
+        if(this.props.referenceline){
+            
+            return (
+                this.props.referenceline.map((line) =>
+                    line.type==="y" ? (
+                        <ReferenceLine key={line.value} y={line.value} stroke="red" strokeDasharray="3 3"/>
+                    ) : (
+                        <ReferenceLine key={line.value} x={line.value} stroke="red" strokeDasharray="3 3"/>
+                    )
+                )
+            );
+        }
+    }
+    renderArea = () => {
+        if(this.props.area){
+            return (
+                this.props.area.map((line) =>
+                    <Area key={line.name} dot={false} type="linear" dataKey={line.name} stroke='none' fill={line.color}/>
+                )
+            );
+        }
+    }
+    renderLegend=()=>{
+        if(this.props.legend){
+            return (
+                <Legend
+                    layout='vertical'
+                    payload={this.legend()}
+                    wrapperStyle={{
+                        top:50,
+                        left: 100,
+                        float: 'left'
+                    }}
+                />
+            );
+        }
+    }
+    legend=()=>{
+        return this.props.legend.map((label) => ({value: label, type: 'line'}));
+    }
+    render() {return(
         <Div justify="space-around" row margin="25px" width="100%">
             <Div margin="25px" align="center">
                 <input style={{display: 'none'}}type="file" id="input-file-pulse" onChange={(event)=>{readFile(event.target.files[0],this.load,this.props.param)}}/>
@@ -77,20 +133,19 @@ class Page extends React.Component {
                 <Button width="100%" variant="contained" onClick={()=>{save2png(this.refs.targetimg)}}>Screenshot</Button>
             </Div>
             <Div margin="25px" ref="targetimg" id="targetimg">
-                <Chart 
-                    data={this.state} area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
-                    referenceline={[
-                    {value:this.state.X_FWHM_min},
-                    {value:this.state.X_FWHM_max},
-                    {type:"y",value:1/this.state.level},
-                    ]}
-                    legend={[`Quality : ${this.state.quality}%`,`\u0394t : ${this.state.deltaWL}fs`]}
-                    xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'
-                />
-                <div id="loadImg"></div>
+                <AreaChart  width={550} height={400} data={this.state.data}
+                    margin={{ top: 0, right: 0, left: 0, bottom: 20 }}>
+                    <XAxis allowDataOverflow={true} type="number" dataKey="name" domain={this.domain()}
+                    label={{ value: this.props.xlabel, offset: -5, position: 'insideBottom' }} ticks={this.ticks()} scale="linear"/>
+                    <YAxis hide={false} allowDataOverflow={true} type="number" domain={[0, 1]}
+                    label={{ value: this.props.ylabel, angle: -90, position: 'insideLeft' }}/>
+                    <CartesianAxis/>
+                    {this.renderLegend()}
+                    {this.renderReferenceLine()}
+                    {this.renderArea()}
+                </AreaChart>
             </Div>
         </Div>
-    );
-  }
+    );}
 }
 export default withRouter(Page);

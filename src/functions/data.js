@@ -1,21 +1,15 @@
 import hoverstate from 'react-hoverstate';
 export function getData(id){
-  let init = {
-    data:null,
-    niveau:2,
-    start:1020,
-    end:1040
-  }
   if (hoverstate.state.data) {
     if (hoverstate.state.data[id]) {
       return hoverstate.state.data[id]
     }
     else {
-      return init;
+      return false;
     }
   }
   else {
-    return init;
+    return false;
   }
 }
 export function setData(id,object){

@@ -69,16 +69,16 @@ export class Chart extends React.Component {
     render() {
       return (
         <AreaChart  width={550} height={400} data={this.props.data.data}
-        margin={{ top: 0, right: 0, left: 0, bottom: 20 }}>
-        <XAxis allowDataOverflow={true} type="number" dataKey="name" domain={this.domain()}
-          label={{ value: this.props.xlabel, offset: -5, position: 'insideBottom' }} ticks={this.ticks()} scale="linear"/>
-        <YAxis hide={false} allowDataOverflow={true} type="number" domain={[0, 1]}
-          label={{ value: this.props.ylabel, angle: -90, position: 'insideLeft' }}/>
-        <CartesianAxis/>
-        {this.renderLegend()}
-        {this.renderReferenceLine()}
-        {this.renderArea()}
-      </AreaChart>
+            margin={{ top: 0, right: 0, left: 0, bottom: 20 }}>
+            <XAxis allowDataOverflow={true} type="number" dataKey="name" domain={this.domain()}
+            label={{ value: this.props.xlabel, offset: -5, position: 'insideBottom' }} ticks={this.ticks()} scale="linear"/>
+            <YAxis hide={false} allowDataOverflow={true} type="number" domain={[0, 1]}
+            label={{ value: this.props.ylabel, angle: -90, position: 'insideLeft' }}/>
+            <CartesianAxis/>
+            {this.renderLegend()}
+            {this.renderReferenceLine()}
+            {this.renderArea()}
+        </AreaChart>
       );
     }
   }

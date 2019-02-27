@@ -2,7 +2,11 @@ import React from 'react';
 import {Page} from "src/containers";
 import regression from 'regression';
 class Autocorrelation extends React.Component {
-  
+  constructor()
+    {
+        super();
+        this.state={}
+    }
   traitement=(input,Ymin,Ymax)=>{
     let data = input;
     let dataRegression=[];
@@ -32,39 +36,43 @@ class Autocorrelation extends React.Component {
     return {data,start,end};
   }
   analyse = (data) =>{
-    // let data = getData(this.props.match.params.id);
-    // if(data.data.length<5){
-    //   return {deltaWL:0,X_FWHM_max:0,X_FWHM_min:0};
-    // }
-    // else{
-      let X_FWHM_max =data.data[0].name;
-      let X_FWHM_min = data.data[data.data.length-1].name;
-      let somme = 0, diff = 0;
-      for (let i = 0; i < data.data.length-1; i++) {
-        somme = somme + data.data[i].fit;
-        diff = diff + Math.abs(data.data[i].pulse-data.data[i].fit);
-        if ((data.data[i].fit<=1/data.level && 1/data.level<=data.data[i+1].fit)||(data.data[i].fit>=1/data.level && 1/data.level>=data.data[i+1].fit)){
-          if(X_FWHM_max<data.data[i].name){
-            X_FWHM_max = data.data[i].name;
-          }
-          if(X_FWHM_min>data.data[i].name){
-            X_FWHM_min = data.data[i].name;
-          }
+    let level = data.level;
+    let X_FWHM_max =data.data[0].name;
+    let X_FWHM_min = data.data[data.data.length-1].name;
+    let somme = 0, diff = 0;
+    for (let i = 0; i < data.data.length-1; i++) {
+      somme = somme + data.data[i].fit;
+      diff = diff + Math.abs(data.data[i].pulse-data.data[i].fit);
+      if ((data.data[i].fit<=1/data.level && 1/data.level<=data.data[i+1].fit)||(data.data[i].fit>=1/data.level && 1/data.level>=data.data[i+1].fit)){
+        if(X_FWHM_max<data.data[i].name){
+          X_FWHM_max = data.data[i].name;
+        }
+        if(X_FWHM_min>data.data[i].name){
+          X_FWHM_min = data.data[i].name;
         }
       }
-      let quality = (1 - diff/somme)*100;
-      let deltaWL = (X_FWHM_max - X_FWHM_min)*685;
-      quality = Math.round(quality*100)/100;
-      deltaWL = Math.round(deltaWL);
-      return {quality,deltaWL,X_FWHM_max,X_FWHM_min};
-    // }
+    }
+    let quality = (1 - diff/somme)*100;
+    let deltaWL = (X_FWHM_max - X_FWHM_min)*685;
+    quality = Math.round(quality*100)/100;
+    deltaWL = Math.round(deltaWL);
+    this.setState({X_FWHM_max,X_FWHM_min,level,deltaWL,quality})
+    return null;
   }
   render() {
     return(
       <Page
       traitement={this.traitement} analyse={this.analyse}
       param={{firstline:15,lastline:1, firstcol:1, lastcol:2, spliter: /\s+/}}
-      init={{data:[],start:0,end:5,level:2}} 
+      init={{data:[],start:0,end:5,level:2}}
+      area={[{name: "pulse",color:"blue"},{name: "fit",color:"red"}]}
+      referenceline={[
+      {value:this.state.X_FWHM_min},
+      {value:this.state.X_FWHM_max},
+      {type:"y",value:1/this.state.level},
+      ]}
+      legend={[`Quality : ${this.state.quality}%`,`\u0394t : ${this.state.deltaWL}fs`]}
+      xlabel='Wavelength (nm)' ylabel='Intensity (a.u)'
       inputs={[
         {
           label:"level de la largeur",
