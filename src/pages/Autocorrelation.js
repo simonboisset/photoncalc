@@ -59,6 +59,13 @@ class Autocorrelation extends React.Component {
     this.setState({X_FWHM_max,X_FWHM_min,level,deltaWL,quality})
     return null;
   }
+  shouldComponentUpdate(nextProps, nextState){
+    if (this.state.deltaWL===nextState.deltaWL) {
+      return false
+    } else{
+      return true
+    }
+  }
   render() {
     return(
       <Page

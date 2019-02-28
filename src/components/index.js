@@ -15,8 +15,7 @@ import {Segment} from './Segment';
 import {theme} from "./theme";
 import {Paper} from './Paper';
 import {Image} from './Image';
-import {Chart} from './Chart';
 import {Router,Route,Link,Redirect} from './Router';
 import {Card,CardActions,CardContent,CardMedia,CardHeader} from "./Card";
-export {Chart,Dialog,DialogActions,DialogContent,DialogTitle,Slide,List,ListItem,ListItemIcon,ListItemText,ListItemSecondaryAction,Divider,Button,Image,Redirect,SearchBar,Segment,Input,Header,Icon
+export {Dialog,DialogActions,DialogContent,DialogTitle,Slide,List,ListItem,ListItemIcon,ListItemText,ListItemSecondaryAction,Divider,Button,Image,Redirect,SearchBar,Segment,Input,Header,Icon
   ,Footer,Body,Div,Title,Card,CardActions,CardContent,CardMedia,CardHeader,ToolBar,Menu,MenuItem,IconButton,Router,Route,Link,Paper,theme};
