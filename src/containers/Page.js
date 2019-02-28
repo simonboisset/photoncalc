@@ -84,19 +84,20 @@ class Page extends React.Component {
     }
       
     renderReferenceLine = () => {
-        if(this.props.referenceline[0].value){ 
-            return (
-                this.props.referenceline.map((line) =>
-                    line.type==="y" ? (
-                        <ReferenceLine key={`y${line.value}`} y={line.value} stroke="red" strokeDasharray="3 3"/>
-                    ) : (
-                        <ReferenceLine key={`x${line.value}`} x={line.value} stroke="red" strokeDasharray="3 3"/>
+        if (this.props.referenceline) {
+            if(this.props.referenceline[0].value){ 
+                return (
+                    this.props.referenceline.map((line) =>
+                        line.type==="y" ? (
+                            <ReferenceLine key={`y${line.value}`} y={line.value} stroke="red" strokeDasharray="3 3"/>
+                        ) : (
+                            <ReferenceLine key={`x${line.value}`} x={line.value} stroke="red" strokeDasharray="3 3"/>
+                        )
                     )
-                )
-            );
-        }else{
-            return null;
+                );
+            }
         }
+        return null;
     }
     renderArea = () => {
         if(this.props.area){

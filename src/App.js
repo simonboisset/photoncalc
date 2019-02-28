@@ -23,7 +23,11 @@ class App extends Component {
             <Route path="/pointe/:id" component={Pointe} />
             <Route path="/autocorrelation/:id" component={Autocorrelation} />
           </Body>
-        <Footer></Footer>
+        <Footer>
+          <p>Licence MIT</p>
+          <p>Copirigth</p>
+          <p>GitHub</p>
+        </Footer>
       </Div></Router>
     );
   }
