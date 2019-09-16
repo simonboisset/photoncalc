@@ -11,11 +11,10 @@ export class PropagationComponent implements OnInit {
   w0=6;
   wavelength=1030;
   numberOfPoints=100;
-  ableToModify = true
   constructor() { }
 
   addElement(index: number) {
-    this.opticalElementList.splice(index, 0, { label: "Label", value: 0, type : "distance" });
+    this.opticalElementList.splice(index, 0, { label: "Label", value: 0, type : "distance", ableToModify:true });
   }
   delElement(index: number) {
     this.opticalElementList.splice(index, 1);
