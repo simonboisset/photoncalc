@@ -1,9 +1,15 @@
-.btn-group{
-    display: flex;
+.btn-group {
+  display: flex;
 }
-.btn-group .btn{
-    flex: 1;
+.btn-group .btn {
+  flex: 1;
 }
-.card{
-    margin: 10px 0 0 0;
+.btn-block {
+  margin: 0 0 8px 0;
+}
+.row {
+  margin-top: 25px;
+}
+.btn-outline-warning:hover {
+  color: white;
 }

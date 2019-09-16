@@ -29,45 +29,43 @@
                 <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="numberOfPoints">
             </div>
             <button class="btn btn-outline-success btn-block" (click)="addElement(0)">Ajouter un élément</button>
-            <div class="card" *ngFor="let opticalElement of opticalElementList; let index = index;">
-                <div class="card-body">
-                    <div *ngIf="opticalElement.ableToModify" class="input-group mb-2 mr-sm-2">
-                        <input type="text" class="form-control" placeholder="Label" [(ngModel)]="opticalElement.label">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Type</span>
-                        </div>
-                        <select class="form-control" [(ngModel)]="opticalElement.type">
-                            <option value="lens">Lens</option>
-                            <option value="distance">Distance</option>
-                        </select>
+            <div *ngFor="let opticalElement of opticalElementList; let index = index;"
+                [ngClass]="{'primary': opticalElement.type === 'lens', 'success': opticalElement.type === 'distance'}">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-danger material-icons" (click)="delElement(index)">clear</button>
                     </div>
-                    <div class="input-group mb-2 mr-sm-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">{{opticalElement.label}}</span>
-                        </div>
-                        <div class="input-group-prepend">
-                            <span
-                                class="input-group-text">{{opticalElement.type === "distance"? "Distance" : "Focale"}}</span>
-                        </div>
-                        <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value">
-                        <div class="input-group-append">
-                            <div class="input-group-text">mm</div>
-                        </div>
+                    <!-- <input *ngIf="opticalElement.ableToModify" type="text" class="form-control" placeholder="Label"
+                        [(ngModel)]="opticalElement.label"> -->
+                    <select *ngIf="opticalElement.ableToModify" class="form-control" [(ngModel)]="opticalElement.type">
+                        <option value="lens">Lentille</option>
+                        <option value="distance">Distance</option>
+                    </select>
+                    <!-- <div *ngIf="!opticalElement.ableToModify" class="input-group-prepend">
+                        <span class="input-group-text">{{opticalElement.label}}</span>
+                    </div> -->
+                    <div class="input-group-prepend">
+                        <span *ngIf="!opticalElement.ableToModify"
+                            class="input-group-text">{{opticalElement.type === "distance"? "L" : "F"}}</span>
                     </div>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-outline-danger" (click)="delElement(index)">Supprimer</button>
-                        <button *ngIf="!opticalElement.ableToModify" class="btn btn-outline-warning"
-                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">Modifier</button>
-                        <button *ngIf="opticalElement.ableToModify" class="btn btn-outline-info"
-                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">Valider</button>
-                        <button class="btn btn-outline-success" (click)="addElement(index+1)">Ajouter</button>
+                    <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value">
+                    <div class="input-group-append">
+                        <div class="input-group-text">mm</div>
+                        <button *ngIf="!opticalElement.ableToModify" class="btn btn-outline-warning material-icons"
+                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">build</button>
+                        <button *ngIf="opticalElement.ableToModify" class="btn btn-outline-info material-icons"
+                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">done</button>
+                        <button class="btn btn-outline-success material-icons"
+                            (click)="addElement(index+1)">add</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col col-md-8 col-sm-12">
             <div class="row justify-content-center">
-                <!-- {{propagationData()}} -->
+                <google-chart [title]="chart.title" [type]="chart.type" [data]="chart.data"
+                    [columnNames]="chart.columnNames">
+                </google-chart>
             </div>
         </div>
     </div>
