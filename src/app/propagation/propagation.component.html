@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <h4>Simulation de propagation du faisceau</h4>
+    </div>
+    <div class="row">
+        <div class="col col-md-4 col-sm-12">
+            <label>Waist</label>
+            <div class="input-group mb-2 mr-sm-2">
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="w0">
+                <div class="input-group-append">
+                    <div class="input-group-text">µm</div>
+                </div>
+            </div>
+            <label>Longueur d'onde centrale</label>
+            <div class="input-group mb-2 mr-sm-2">
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="wavelength">
+                <div class="input-group-append">
+                    <div class="input-group-text">nm</div>
+                </div>
+            </div>
+            <label>Nombre de points</label>
+            <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="numberOfPoints">
+            <button class="btn btn-outline-success btn-block" (click)="addElement(0)">Ajouter un élément</button>
+            <div class="card" *ngFor="let opticalElement of opticalElementList; let index = index;">
+                <h5 class="card-header">{{opticalElement.label}}</h5>
+                <div class="card-body">
+
+                    <div *ngIf="ableToModify" class="input-group mb-2 mr-sm-2">
+                        <input type="text" class="form-control" placeholder="Label" [(ngModel)]="opticalElement.label">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Type</span>
+                        </div>
+                        <select class="form-control" [(ngModel)]="opticalElement.type">
+                            <option value="lens">Lens</option>
+                            <option value="distance">Distance</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{{opticalElement.type === "distance"? "Distance" : "Focale"}}</span>
+                        </div>
+                        <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value">
+                        <div class="input-group-append">
+                            <div class="input-group-text">mm</div>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-danger" (click)="delElement(index)">Supprimer</button>
+                        <button *ngIf="!ableToModify" class="btn btn-outline-warning"
+                            (click)="ableToModify=!ableToModify">Modifier</button>
+                        <button *ngIf="ableToModify" class="btn btn-outline-info"
+                            (click)="ableToModify=!ableToModify">Valider</button>
+                        <button class="btn btn-outline-success" (click)="addElement(index+1)">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-8 col-sm-12">
+            <div class="row justify-content-center">
+                <!-- {{propagationData()}} -->
+            </div>
+        </div>
+    </div>
+</div>
