@@ -62,11 +62,10 @@
             </div>
         </div>
         <div class="col col-md-8 col-sm-12">
-            <div class="row justify-content-center">
-                <google-chart [title]="chart.title" [type]="chart.type" [data]="chart.data"
-                    [columnNames]="chart.columnNames">
-                </google-chart>
-            </div>
+                <app-line-chart
+                    [data]="data"
+                    [options]="options"
+                ></app-line-chart>
         </div>
     </div>
 </div>
