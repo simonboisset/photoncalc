@@ -7,6 +7,13 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { PropagationComponent } from './propagation/propagation.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
+import { HomeComponent } from './home/home.component';
+import { PulseComponent } from './pulse/pulse.component';
+import { SpectrumComponent } from './spectrum/spectrum.component';
+import { ModeComponent } from './mode/mode.component';
+import { PowerComponent } from './power/power.component';
+import { PositionComponent } from './position/position.component';
+import { M2Component } from './m2/m2.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +21,14 @@ import { LineChartComponent } from './line-chart/line-chart.component';
     HeaderComponent,
     FooterComponent,
     PropagationComponent,
-    LineChartComponent
+    LineChartComponent,
+    HomeComponent,
+    PulseComponent,
+    SpectrumComponent,
+    ModeComponent,
+    PowerComponent,
+    PositionComponent,
+    M2Component
   ],
   imports: [
     BrowserModule,

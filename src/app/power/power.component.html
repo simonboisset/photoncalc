@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <h4>Power Long-Term Stability</h4>
+    </div>
+    <div class="row">
+        <div class="col col-md-4 col-sm-12">
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">File</div>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" (change)="fileChange($event.target.files[0])">
+                    <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Start</div>
+                </div>
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="start"
+                    (ngModelChange)="rangeChange()">
+                <div class="input-group-append">
+                    <div class="input-group-text">h</div>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">End</div>
+                </div>
+                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="end"
+                    (ngModelChange)="rangeChange()">
+                <div class="input-group-append">
+                    <div class="input-group-text">h</div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-8 col-sm-12">
+            <app-line-chart [data]="data" [options]="options"></app-line-chart>
+        </div>
+    </div>
+</div>

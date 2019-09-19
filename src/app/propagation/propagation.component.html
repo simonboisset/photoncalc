@@ -8,7 +8,7 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">Waist</div>
                 </div>
-                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="w0">
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="w0" (ngModelChange)="computedData()">
                 <div class="input-group-append">
                     <div class="input-group-text">µm</div>
                 </div>
@@ -17,7 +17,7 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">Longueur d'onde</div>
                 </div>
-                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="wavelength">
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="wavelength" (ngModelChange)="computedData()">
                 <div class="input-group-append">
                     <div class="input-group-text">nm</div>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">Nombre de points</div>
                 </div>
-                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="numberOfPoints">
+                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="numberOfPoints" (ngModelChange)="computedData()">
             </div>
             <button class="btn btn-outline-success btn-block" (click)="addElement(0)">Ajouter un élément</button>
             <div *ngFor="let opticalElement of opticalElementList; let index = index;"
@@ -37,7 +37,7 @@
                     </div>
                     <!-- <input *ngIf="opticalElement.ableToModify" type="text" class="form-control" placeholder="Label"
                         [(ngModel)]="opticalElement.label"> -->
-                    <select *ngIf="opticalElement.ableToModify" class="form-control" [(ngModel)]="opticalElement.type">
+                    <select *ngIf="opticalElement.ableToModify" class="form-control custom-select" [(ngModel)]="opticalElement.type" (ngModelChange)="computedData()">
                         <option value="lens">Lentille</option>
                         <option value="distance">Distance</option>
                     </select>
@@ -48,7 +48,7 @@
                         <span *ngIf="!opticalElement.ableToModify"
                             class="input-group-text">{{opticalElement.type === "distance"? "L" : "F"}}</span>
                     </div>
-                    <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value">
+                    <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value" (ngModelChange)="computedData()">
                     <div class="input-group-append">
                         <div class="input-group-text">mm</div>
                         <button *ngIf="!opticalElement.ableToModify" class="btn btn-outline-warning material-icons"

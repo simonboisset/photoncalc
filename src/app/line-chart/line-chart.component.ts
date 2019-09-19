@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, Input, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, Input, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 
 declare var google: any;
 
@@ -7,21 +7,26 @@ declare var google: any;
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss']
 })
-export class LineChartComponent implements AfterViewInit {
+export class LineChartComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('chart_div', { static: false }) pieChart: ElementRef;
   @Input() data: [];
   @Input() options: {};
-  constructor() { }
-
-  draw = () => {
-    const data = google.visualization.arrayToDataTable(this.data);
-    const chart = new google.visualization.LineChart(this.pieChart.nativeElement);
-    chart.draw(data, this.options);
+  constructor() {
+    google.charts.load('current', { 'packages': ['corechart', 'line'] });
+  }
+  ngOnChanges(changes: SimpleChanges) {
+      this.draw(changes.data.currentValue);
+  }
+  draw = (inputData: []) => {
+    google.charts.setOnLoadCallback(() => {
+      const data = google.visualization.arrayToDataTable(inputData);
+      const chart = new google.visualization.LineChart(this.pieChart.nativeElement);
+      chart.draw(data, this.options);
+    });
   }
   ngAfterViewInit() {
-    google.charts.load('current', { 'packages': ['corechart', 'line'] });
-    google.charts.setOnLoadCallback(this.draw);
+    this.draw(this.data);
   }
 }
 

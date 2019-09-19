@@ -7,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PropagationComponent implements OnInit {
 
-  opticalElementList = [];
-  w0 = 6;
+  opticalElementList = [{ label: "Label", value: 50, type: "distance", ableToModify: false },
+  { label: "Label", value: 50, type: "lens", ableToModify: false },
+  { label: "Label", value: 100, type: "distance", ableToModify: false }];
+  w0 = 0.6;
   wavelength = 1030;
-  numberOfPoints = 100;
+  numberOfPoints = 500;
+  data: any = [['Distance', 'Beam diameter']];
   options = {
     hAxis: {
       title: 'Distance (mm)'
@@ -20,11 +23,13 @@ export class PropagationComponent implements OnInit {
     },
     width: 600,
     height: 400,
-    legend:"none",
-    chartArea: {right:10,top:10, width: '90%', height: '90%'},
+    legend: "none",
+    chartArea: { right: 10, top: 10, width: '90%', height: '90%' },
   };
   constructor() { }
-  ngOnInit(){}
+  ngOnInit() {
+    this.computedData();
+  }
   addElement(index: number) {
     this.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
   }
@@ -59,8 +64,8 @@ export class PropagationComponent implements OnInit {
     }
     return { distance, w0, l, Zr };
   }
-  get data() {
-    let data:any = [['Distance', 'Beam diameter']];
+  computedData() {
+    let data: any = [['Distance', 'Beam diameter']];
     let passageTotal = this.passageTotal();
     let distance = passageTotal.distance;
     let w0 = passageTotal.w0;
@@ -81,6 +86,6 @@ export class PropagationComponent implements OnInit {
       }
 
     }
-    return data;
+    this.data = data;
   }
 }
