@@ -15,9 +15,18 @@
             </div>
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
+                    <div class="input-group-text">File Temperature</div>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" (change)="fileTempChange($event.target.files[0])">
+                    <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
                     <div class="input-group-text">Start</div>
                 </div>
-                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="start"
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="options.hAxis.viewWindow.min"
                     (ngModelChange)="rangeChange()">
                 <div class="input-group-append">
                     <div class="input-group-text">h</div>
@@ -27,7 +36,7 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">End</div>
                 </div>
-                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="end"
+                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="options.hAxis.viewWindow.max"
                     (ngModelChange)="rangeChange()">
                 <div class="input-group-append">
                     <div class="input-group-text">h</div>

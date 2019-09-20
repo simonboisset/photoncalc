@@ -15,18 +15,18 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   constructor() {
     google.charts.load('current', { 'packages': ['corechart', 'line'] });
   }
-  ngOnChanges(changes: SimpleChanges) {
-      this.draw(changes.data.currentValue);
+  ngOnChanges() {
+    this.draw();
   }
-  draw = (inputData: []) => {
+  ngAfterViewInit() {
+    this.draw();
+  }
+  draw(){
     google.charts.setOnLoadCallback(() => {
-      const data = google.visualization.arrayToDataTable(inputData);
+      const data = google.visualization.arrayToDataTable(this.data);
       const chart = new google.visualization.LineChart(this.pieChart.nativeElement);
       chart.draw(data, this.options);
     });
-  }
-  ngAfterViewInit() {
-    this.draw(this.data);
   }
 }
 
