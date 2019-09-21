@@ -31,7 +31,7 @@ export class PowerComponent implements OnInit {
   constructor() { }
   ngOnInit() { }
   fileChange(file: File) {
-    let reader = new FileReader();
+    let reader:any = new FileReader();
     reader.onload = () => {
       if (isString(reader.result)) {
         let data: any = reader.result.split('\n');
@@ -76,7 +76,7 @@ export class PowerComponent implements OnInit {
     reader.readAsText(file);
   }
   fileTempChange = (file: File) => {
-    let reader = new FileReader();
+    let reader:any = new FileReader();
     reader.onload = () => {
       if (isString(reader.result)) {
         let data: any = reader.result;

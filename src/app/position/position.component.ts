@@ -30,7 +30,7 @@ export class PositionComponent implements OnInit {
   constructor() { }
   ngOnInit() { }
   fileChange(file: File) {
-    let reader = new FileReader();
+    let reader:any = new FileReader();
     reader.onload = () => {
       if (isString(reader.result)) {
         // let Ymax = 0, Ymin = null;
@@ -74,14 +74,14 @@ export class PositionComponent implements OnInit {
         mean = Math.round(mean * 100) / 100;
         rms = Math.round(rms * 100) / 100;
         data.splice(0, 0, ['Time', 'X','Y','Xa','Ya']);
-        this.data = data;
         this.options.title = `Mean: ${mean}W RMS: ${rms}%`;
+        this.data = data;
       }
     }
     reader.readAsText(file);
   }
   fileTempChange = (file: File) => {
-    let reader = new FileReader();
+    let reader:any = new FileReader();
     reader.onload = () => {
       if (isString(reader.result)) {
         let data: any = reader.result;
