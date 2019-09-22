@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { isString } from 'util';
 @Component({
   selector: 'app-page-body',
@@ -6,10 +6,9 @@ import { isString } from 'util';
   styleUrls: ['./page-body.component.scss']
 })
 export class PageBodyComponent implements OnInit {
-  start = 0;
-  end = 1;
-  rms = 0;
-  mean = 0;
+  @Input() inputFile: [{ columns: string[], transformData: Function, makeOptions: Function, label: string, firstLine: number, lastLine: number }];
+  @Input() title: string;
+
   data: any = [['Time', 'Power']];
   options = {
     hAxis: {
@@ -28,38 +27,19 @@ export class PageBodyComponent implements OnInit {
   };
   constructor() { }
   ngOnInit() { }
-  fileChange(file: File) {
+  onFileChange(file: File, i: number) {
     let reader: any = new FileReader();
     reader.onload = () => {
       if (isString(reader.result)) {
-        let Ymax =0;
         let data: any = reader.result.split('\n');
-        data.splice(0, 17);
-        data.splice(data.length - 1, 1);
-        data = data.map((row: string) => {
-          let newRow: any = row.split(";");
-          newRow = newRow.map((text: string) => Number(text.replace(',', '.')));
-          Ymax = Math.max(Ymax, newRow[1])
-          return newRow;
-        });
-        
-        const X_FWHM_min = data.find((row:number[])=> row[1]>=Ymax/2)[0];
-        const X_FWHM_max = data.reverse().find((row:number[])=> row[1]>=Ymax/2)[0];
-        let deltaWL = X_FWHM_max - X_FWHM_min;
-        let centralWL = (X_FWHM_max + X_FWHM_min) / 2;
-        centralWL = Math.round(centralWL * 100) / 100;
-        deltaWL = Math.round(deltaWL * 100) / 100;
-        data.splice(0, 0, ["Longueur d'onde", 'Intensity']);
-        this.options.title = `Longueur d'onde: ${centralWL}nm Largeur: ${deltaWL}nm`;
-        this.options.hAxis.viewWindow.min = Math.round((centralWL-deltaWL*2)/5)*5;
-        this.options.hAxis.viewWindow.max = Math.round((centralWL+deltaWL*2)/5)*5;
+        data.splice(0, this.inputFile[i].firstLine);
+        data.splice(data.length - this.inputFile[i].lastLine, this.inputFile[i].lastLine);
+        data = data.map((row: string) => this.inputFile[i].transformData(row));
+        this.inputFile[i].makeOptions(data, this.options)
+        data.splice(0, 0, this.inputFile[i].columns);
         this.data = data;
       }
     }
     reader.readAsText(file);
-  }
-
-  rangeChange() {
-    // this.data = this.data;
   }
 }
