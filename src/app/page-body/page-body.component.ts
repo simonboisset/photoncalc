@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { isString } from 'util';
 @Component({
-  selector: 'app-mode',
-  templateUrl: './mode.component.html',
-  styleUrls: ['./mode.component.scss']
+  selector: 'app-page-body',
+  templateUrl: './page-body.component.html',
+  styleUrls: ['./page-body.component.scss']
 })
-export class ModeComponent implements OnInit {
-
+export class PageBodyComponent implements OnInit {
   start = 0;
   end = 1;
   rms = 0;
@@ -63,5 +62,4 @@ export class ModeComponent implements OnInit {
   rangeChange() {
     // this.data = this.data;
   }
-
 }

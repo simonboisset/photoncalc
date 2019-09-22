@@ -14,6 +14,7 @@ import { ModeComponent } from './mode/mode.component';
 import { PowerComponent } from './power/power.component';
 import { PositionComponent } from './position/position.component';
 import { M2Component } from './m2/m2.component';
+import { PageBodyComponent } from './page-body/page-body.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { M2Component } from './m2/m2.component';
     ModeComponent,
     PowerComponent,
     PositionComponent,
-    M2Component
+    M2Component,
+    PageBodyComponent
   ],
   imports: [
     BrowserModule,
