@@ -15,7 +15,7 @@ import { PowerComponent } from './power/power.component';
 import { PositionComponent } from './position/position.component';
 import { M2Component } from './m2/m2.component';
 import { PageBodyComponent } from './page-body/page-body.component';
-
+import { DataService } from './data.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +37,9 @@ import { PageBodyComponent } from './page-body/page-body.component';
     AppRoutingModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [
+    DataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

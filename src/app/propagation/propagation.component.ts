@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-propagation',
@@ -7,9 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PropagationComponent implements OnInit {
 
-  opticalElementList = [{ label: "Label", value: 50, type: "distance", ableToModify: false },
-  { label: "Label", value: 50, type: "lens", ableToModify: false },
-  { label: "Label", value: 100, type: "distance", ableToModify: false }];
+  opticalElementList = DataService.propagation.opticalElementList
   w0 = 0.6;
   wavelength = 1030;
   numberOfPoints = 500;
@@ -32,6 +31,7 @@ export class PropagationComponent implements OnInit {
   }
   addElement(index: number) {
     this.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
+    DataService.propagation.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
   }
   delElement(index: number) {
     this.opticalElementList.splice(index, 1);
