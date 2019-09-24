@@ -33,6 +33,5 @@ export class HeaderComponent implements OnInit {
   }
   save() {
     localStorage.setItem("data", JSON.stringify(DataService.data));
-    navigator.clipboard.writeText(JSON.stringify(DataService.data));
   }
 }
