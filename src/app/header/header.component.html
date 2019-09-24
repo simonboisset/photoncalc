@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand" routerLink="">Photon-Tools</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Mesures
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" routerLink="propagation">Propagation</a>
+                    <a class="dropdown-item" routerLink="power">Endurance</a>
+                    <a class="dropdown-item" routerLink="position">Pointé</a>
+                    <a class="dropdown-item" routerLink="m2">M2</a>
+                    <a class="dropdown-item" routerLink="pulse">Autocorélation</a>
+                    <a class="dropdown-item" routerLink="spectre">Spèctre</a>
+                </div>
+            </li>
+            
+        </ul>
+
+        <button class="btn btn-outline-success my-2 my-sm-0" (click)="exemple()">Exemple</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" (click)="import()">Import</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" (click)="export()">Export</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" (click)="save()">Save</button>
+    </div>
+</nav>

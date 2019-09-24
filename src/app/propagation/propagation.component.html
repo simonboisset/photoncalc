@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <h4>Simulation de propagation du faisceau</h4>
+    </div>
+    <div class="row">
+        <div class="col col-md-4 col-sm-12">
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Waist</div>
+                </div>
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="w0" (ngModelChange)="computedData()">
+                <div class="input-group-append">
+                    <div class="input-group-text">µm</div>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Longueur d'onde</div>
+                </div>
+                <input type="number" class="form-control" min="0" placeholder="0" [(ngModel)]="wavelength" (ngModelChange)="computedData()">
+                <div class="input-group-append">
+                    <div class="input-group-text">nm</div>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Nombre de points</div>
+                </div>
+                <input type="number" class="form-control" min="1" placeholder="1" [(ngModel)]="numberOfPoints" (ngModelChange)="computedData()">
+            </div>
+            <button class="btn btn-outline-success btn-block" (click)="addElement(0)">Ajouter un élément</button>
+            <div *ngFor="let opticalElement of opticalElementList; let index = index;"
+                [ngClass]="{'primary': opticalElement.type === 'lens', 'success': opticalElement.type === 'distance'}">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-danger material-icons" (click)="delElement(index)">clear</button>
+                    </div>
+                    <!-- <input *ngIf="opticalElement.ableToModify" type="text" class="form-control" placeholder="Label"
+                        [(ngModel)]="opticalElement.label"> -->
+                    <select *ngIf="opticalElement.ableToModify" class="form-control custom-select" [(ngModel)]="opticalElement.type" (ngModelChange)="computedData()">
+                        <option value="lens">Lentille</option>
+                        <option value="distance">Distance</option>
+                    </select>
+                    <!-- <div *ngIf="!opticalElement.ableToModify" class="input-group-prepend">
+                        <span class="input-group-text">{{opticalElement.label}}</span>
+                    </div> -->
+                    <div class="input-group-prepend">
+                        <span *ngIf="!opticalElement.ableToModify"
+                            class="input-group-text">{{opticalElement.type === "distance"? "L" : "F"}}</span>
+                    </div>
+                    <input type="number" class="form-control" placeholder="0" [(ngModel)]="opticalElement.value" (ngModelChange)="computedData()">
+                    <div class="input-group-append">
+                        <div class="input-group-text">mm</div>
+                        <button *ngIf="!opticalElement.ableToModify" class="btn btn-outline-warning material-icons"
+                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">build</button>
+                        <button *ngIf="opticalElement.ableToModify" class="btn btn-outline-info material-icons"
+                            (click)="opticalElement.ableToModify=!opticalElement.ableToModify">done</button>
+                        <button class="btn btn-outline-success material-icons"
+                            (click)="addElement(index+1)">add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-8 col-sm-12">
+                <app-line-chart
+                    [data]="data"
+                    [options]="options"
+                ></app-line-chart>
+        </div>
+    </div>
+</div>

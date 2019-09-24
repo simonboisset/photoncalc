@@ -1,0 +1,32 @@
+.btn-group {
+    display: flex;
+  }
+  .btn-group .btn {
+    flex: 1;
+  }
+  .btn-block {
+    margin: 0 0 8px 0;
+  }
+  .row {
+    margin-top: 25px;
+  }
+  .btn-outline-warning:hover {
+    color: white;
+  }
+  input {
+    /* Firefox */
+    -moz-appearance: textfield;
+  
+    /* Chrome */
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  
+    /* Opéra*/
+    &::-o-inner-spin-button {
+      -o-appearance: none;
+      margin: 0;
+    }
+  }
+  
