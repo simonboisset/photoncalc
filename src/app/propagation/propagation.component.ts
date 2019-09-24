@@ -8,10 +8,10 @@ import { DataService } from '../data.service';
 })
 export class PropagationComponent implements OnInit {
 
-  opticalElementList = DataService.propagation.opticalElementList
-  w0 = 0.6;
-  wavelength = 1030;
-  numberOfPoints = 500;
+  opticalElementList = DataService.data.propagation.opticalElementList
+  w0 = DataService.data.propagation.w0;
+  wavelength = DataService.data.propagation.wavelength;
+  numberOfPoints = DataService.data.propagation.numberOfPoints;
   data: any = [['Distance', 'Beam diameter']];
   options = {
     hAxis: {
@@ -31,7 +31,7 @@ export class PropagationComponent implements OnInit {
   }
   addElement(index: number) {
     this.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
-    DataService.propagation.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
+    // DataService.propagation.opticalElementList.splice(index, 0, { label: "Label", value: 0, type: "distance", ableToModify: true });
   }
   delElement(index: number) {
     this.opticalElementList.splice(index, 1);

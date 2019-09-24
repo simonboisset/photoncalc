@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { DataService } from '../data.service';
 import { isString } from 'util';
 @Component({
   selector: 'app-page-body',
@@ -26,7 +27,18 @@ export class PageBodyComponent implements OnInit {
     chartArea: { right: 10, top: 10, width: '90%', height: '80%' },
   };
   constructor() { }
-  ngOnInit() { }
+  ngOnInit() { 
+    if (DataService.data[this.title]) {
+      this.data = DataService.data[this.title].data;
+      this.options = DataService.data[this.title].options;
+    }
+    else{
+      DataService.data[this.title] = {
+        data : this.data,
+        options : this.options
+      }
+    }
+  }
   onFileChange(file: File, i: number) {
     let reader: any = new FileReader();
     reader.onload = () => {
@@ -37,6 +49,7 @@ export class PageBodyComponent implements OnInit {
         data = data.map((row: string) => this.inputFile[i].transformData(row));
         this.inputFile[i].makeOptions(data, this.options)
         data.splice(0, 0, this.inputFile[i].columns);
+        DataService.data[this.title].data = data;
         this.data = data;
       }
     }
