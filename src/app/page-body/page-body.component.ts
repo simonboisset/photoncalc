@@ -9,23 +9,8 @@ import { isString } from 'util';
 export class PageBodyComponent implements OnInit {
   @Input() inputFile: [{ columns: string[], transformData: Function, makeOptions: Function, label: string, firstLine: number, lastLine: number }];
   @Input() title: string;
-
+  @Input() options : google.visualization.LineChartOptions
   data: any = [['Time', 'Power']];
-  options = {
-    hAxis: {
-      title: 'Time (h)',
-      viewWindow: { min: 0, max: 0 },
-    },
-    vAxis: {
-      title: 'Power (W)',
-    },
-    title: "Moyenn: W RMS: %",
-    titlePosition: "in",
-    width: 600,
-    height: 400,
-    legend: { position: "in" },
-    chartArea: { right: 10, top: 10, width: '90%', height: '80%' },
-  };
   constructor() { }
   ngOnInit() { 
     if (DataService.data[this.title]) {
@@ -46,8 +31,7 @@ export class PageBodyComponent implements OnInit {
         let data: any = reader.result.split('\n');
         data.splice(0, this.inputFile[i].firstLine);
         data.splice(data.length - this.inputFile[i].lastLine, this.inputFile[i].lastLine);
-        data = data.map((row: string) => this.inputFile[i].transformData(row));
-        this.inputFile[i].makeOptions(data, this.options)
+        data = this.inputFile[i].transformData(data,this.options);
         data.splice(0, 0, this.inputFile[i].columns);
         DataService.data[this.title].data = data;
         this.data = data;
