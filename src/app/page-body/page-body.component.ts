@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../data.service';
 import { isString } from 'util';
 @Component({
@@ -10,6 +10,7 @@ export class PageBodyComponent implements OnInit {
   @Input() inputFile: [{ columns: string[], transformData: Function, makeOptions: Function, label: string, firstLine: number, lastLine: number }];
   @Input() title: string;
   @Input() options : google.visualization.LineChartOptions
+  // @Output() data = new EventEmitter();
   data: any = [['Time', 'Power']];
   constructor() { }
   ngOnInit() { 
