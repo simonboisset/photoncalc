@@ -6,25 +6,13 @@ import { isString } from 'util';
   templateUrl: './page-body.component.html',
   styleUrls: ['./page-body.component.scss']
 })
-export class PageBodyComponent implements OnInit {
+export class PageBodyComponent {
   @Input() inputFile: [{ columns: string[], transformData: Function, makeOptions: Function, label: string, firstLine: number, lastLine: number }];
   @Input() title: string;
+  @Input() data: any[];
   @Input() options : google.visualization.LineChartOptions
-  // @Output() data = new EventEmitter();
-  data: any = [['Time', 'Power']];
+  @Output() change = new EventEmitter();
   constructor() { }
-  ngOnInit() { 
-    if (DataService.data[this.title]) {
-      this.data = DataService.data[this.title].data;
-      this.options = DataService.data[this.title].options;
-    }
-    else{
-      DataService.data[this.title] = {
-        data : this.data,
-        options : this.options
-      }
-    }
-  }
   onFileChange(file: File, i: number) {
     let reader: any = new FileReader();
     reader.onload = () => {
@@ -32,10 +20,7 @@ export class PageBodyComponent implements OnInit {
         let data: any = reader.result.split('\n');
         data.splice(0, this.inputFile[i].firstLine);
         data.splice(data.length - this.inputFile[i].lastLine, this.inputFile[i].lastLine);
-        data = this.inputFile[i].transformData(data,this.options);
-        data.splice(0, 0, this.inputFile[i].columns);
-        DataService.data[this.title].data = data;
-        this.data = data;
+        this.change.emit({data,index:i});
       }
     }
     reader.readAsText(file);

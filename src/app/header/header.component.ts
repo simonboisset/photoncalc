@@ -14,12 +14,10 @@ export class HeaderComponent implements OnInit {
       DataService.data = JSON.parse(localStorage.getItem("data"));
     }
     else{
-      this.exemple();
+      DataService.data = Object.assign(DataService.exemple);
     }
   }
-  exemple() { 
-    DataService.data = Object.assign(DataService.exemple);
-  }
+  
   import() { }
   export() {
     var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DataService.data));

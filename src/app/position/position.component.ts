@@ -1,127 +1,140 @@
 import { Component, OnInit } from '@angular/core';
-import { isString } from 'util';
 import * as moment from 'moment';
+import { DataService } from '../data.service';
 @Component({
   selector: 'app-position',
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss']
 })
 export class PositionComponent implements OnInit {
-  start = 0;
-  end = 1;
-  rms = 0;
-  mean = 0;
-  data: any = [['Time', 'Power']];
-  options = {
+  data: any[] = [];
+  inputFile = [{
+    label: "Position",
+    firstLine: 26,
+    lastLine: 8
+  }, {
+    label: "Temp",
+    firstLine: 1,
+    lastLine: 0
+  }]
+  options: google.visualization.LineChartOptions = {
     hAxis: {
       title: 'Time (h)',
       viewWindow: { min: 0, max: 0 },
     },
-    vAxis: {
-      title: 'Power (W)',
+    vAxis: <any>{
+      0: { title: 'Position (µm)' },
+      1: { title: 'Angle (mrad)' },
     },
-    title: "Moyenn: W RMS: %",
-    titlePosition: "in",
+    series : {
+      0: { targetAxisIndex: 0 },
+      1: { targetAxisIndex: 0 },
+      2: { targetAxisIndex: 1 },
+      3: { targetAxisIndex: 1 },
+    },
+    title: "RMS: %",
+    titlePosition: "top",
     width: 600,
     height: 400,
-    legend: { position: "in" },
-    chartArea: { right: 10, top: 10, width: '90%', height: '80%' },
+    legend: { position: "top" },
+    chartArea: { right: 10, top: 40, width: '90%', height: '80%' },
   };
   constructor() { }
-  ngOnInit() { }
-  fileChange(file: File) {
-    let reader:any = new FileReader();
-    reader.onload = () => {
-      if (isString(reader.result)) {
-        // let Ymax = 0, Ymin = null;
-        let data: any = reader.result.split('\n');
-        data.splice(0, 26);
-        data.splice(data.length - 7, 7);
-        data = data.map((row: string) => {
-          let newRow: any;
-          newRow = row
-          newRow = newRow.split(/\s+/);
-          newRow.splice(0, 1);
-          newRow.splice(1, 1);
-          newRow.splice(3, 1);
-          newRow.splice(newRow.length - 1, 1);
-          newRow = newRow.map((text)=>Number(text.replace(',', '.')));
-          
-          // Ymax.a = Math.max(Ymax.a,newRow[1],newRow[2])
-          // Ymin.a = Math.min(Ymin.a,newRow[1],newRow[2])
-          // Ymax.b = Math.max(Ymax.b,newRow[3],newRow[4])
-          // Ymin.b = Math.min(Ymin.b,newRow[3],newRow[4])
-          
-          newRow[0] = newRow[0] / 3600;
-          return newRow;
-        });
-        this.options.hAxis.viewWindow.min = data[0][0];
-        this.options.hAxis.viewWindow.max = Math.round((data[data.length - 1][0]) * 10) / 10;
-
-        // calcul moyenne
-        let mean = 0;
-        for (let i = 0; i < data.length; i++) {
-          mean = mean + data[i][1];
-        }
-        mean = mean / data.length;
-        // calcul écart-type
-        let ecartType = 0;
-        for (let i = 0; i < data.length; i++) {
-          ecartType = ecartType + Math.pow(data[i][1] - mean, 2);
-        }
-        ecartType = Math.sqrt(ecartType / data.length);
-        let rms = (ecartType / mean) * 100;
-        mean = Math.round(mean * 100) / 100;
-        rms = Math.round(rms * 100) / 100;
-        data.splice(0, 0, ['Time', 'X','Y','Xa','Ya']);
-        this.options.title = `Mean: ${mean}W RMS: ${rms}%`;
-        this.data = data;
+  ngOnInit() {
+    if (DataService.data["Position"]) {
+      this.data = DataService.data["Position"].data;
+      this.options = DataService.data["Position"].options;
+    }
+    else {
+      DataService.data["Position"] = {
+        data: this.data,
+        options: this.options
       }
     }
-    reader.readAsText(file);
   }
-  fileTempChange = (file: File) => {
-    let reader:any = new FileReader();
-    reader.onload = () => {
-      if (isString(reader.result)) {
-        let data: any = reader.result;
-        data = data.split('\n');
-        data.splice(0, 1);
-        let t0: moment.Moment;
-        data = data.map((row: string, i: number, array: []) => {
-          let newRow: any = row.slice(0, -2);
-          newRow = row.split(",");
-          // data[i].splice(0,1);
-          newRow[1] = moment(newRow[1], "DD-MM-YYYY HH:mm:ss");
-          if (i === 0) {
-            newRow[0] = 0
-            t0 = newRow[1];
-          }
-          else {
-            newRow[0] = moment.duration(newRow[1].diff(t0)).as("second");
-          }
-          newRow = newRow.map((text: string) => Number(text));
-          return [newRow[0], newRow[2], newRow[3]];
-        });
-        let ii = 0;
-        data = this.data.map((row: any[], i: number) => {
-          if (i === 0) {
-            return ['Time', 'X','Y','Xa','Ya', 'Temperature', 'Humidity']
-          }
-          else {
-            if (data[ii][0] / 3600 < row[0] && data[ii + 1][0] >= row[0]) {
-              ii++
-            }
-            return [row[0], row[1],row[2],row[3],row[4], data[ii][1], data[ii][2]]
-          }
-        });
-        this.data = data;
-      }
+  onChange($event: { data: [], index: number }) {
+    switch ($event.index) {
+      case 0: this.transformDataPosition($event.data);
+        break;
+      case 1: this.transformDataTemp($event.data);
+        break;
     }
-    reader.readAsText(file);
-
   }
-  rangeChange() {
-    // this.data = this.data;
+  transformDataPosition(data: string[]) {
+    let res = data.map((row: string) => {
+      let newRow: any = row
+      newRow = newRow.split(/\s+/);
+      newRow.splice(newRow.length - 1, 1);
+      newRow.splice(0, 1);
+      newRow.splice(1, 1);
+      newRow.splice(3, 1);
+      newRow = newRow.map((text: string) => Number(text.replace(',', '.')));
+      newRow[0] = newRow[0] / 3600;
+      return newRow;
+    })
+    this.options.hAxis.viewWindow.min = res[0][0];
+    this.options.hAxis.viewWindow.max = Math.round((res[res.length - 1][0]) * 10) / 10 - 5;
+
+    let mean = 0;
+    for (let i = 0; i < res.length; i++) {
+      mean = mean + res[i][1];
+    }
+    mean = mean / res.length;
+    // calcul écart-type
+    let ecartType = 0;
+    for (let i = 0; i < res.length; i++) {
+      ecartType = ecartType + Math.pow(res[i][1] - mean, 2);
+    }
+    ecartType = Math.sqrt(ecartType / res.length);
+    let rms = (ecartType / mean) * 100;
+    mean = Math.round(mean * 100) / 100;
+    rms = Math.round(rms * 100) / 100;
+    res.splice(0, 0, ['Time', 'X', 'Y', 'Xa', 'Ya']);
+    this.options.title = `Mean: ${mean}W RMS: ${rms}%`;
+    DataService.data["Position"].data = res;
+    this.data = res;
+  }
+  transformDataTemp(data: string[]) {
+    let t0: moment.Moment;
+    let res = data.map((row: string) => {
+      let newRow: any = row.slice(0, -2);
+      newRow = row.split(",");
+      newRow[1] = moment(newRow[1], "DD-MM-YYYY HH:mm:ss");
+      if (!t0) {
+        newRow[0] = 0
+        t0 = newRow[1];
+      }
+      else {
+        newRow[0] = moment.duration(newRow[1].diff(t0)).as("second");
+      }
+      newRow = newRow.map((text: string) => Number(text));
+      return [newRow[0], newRow[2], newRow[3]];
+    })
+    let ii = 0;
+    this.options.vAxes = {
+      0: { logScale: false },
+      1: { logScale: false },
+      2: { textPosition: "none", title: "" },
+      3: { textPosition: "none", title: "" }
+    },
+      this.options.series = {
+        0: { targetAxisIndex: 0 },
+        1: { targetAxisIndex: 0 },
+        2: { targetAxisIndex: 1 },
+        3: { targetAxisIndex: 1 },
+        4: { targetAxisIndex: 2 },
+        5: { targetAxisIndex: 3 }
+      }
+    res = this.data.map((row: any[], index) => {
+      if (index === 0) {
+        return ['Time', 'X', 'Y', 'Xa', 'Ya', 'Temperature', 'Humidity'];
+      }
+      if (res[ii][0] / 3600 < row[0] && res[ii + 1][0] >= row[0]) {
+        ii++
+      }
+      return [row[0], row[1], row[2], row[3], row[4], res[ii][1], res[ii][2]]
+    });
+    DataService.data["Position"].data = res;
+    this.data = res;
   }
 }
